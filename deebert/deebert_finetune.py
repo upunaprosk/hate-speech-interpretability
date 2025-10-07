@@ -95,20 +95,21 @@ def set_seed(args):
         torch.cuda.manual_seed_all(args.seed)
 
 
-def get_wanted_result(result):
-    if "spearmanr" in result:
-        return result["spearmanr"]
-    elif "f1_binary" in result:   # <-- match your compute_metrics output
-        return result["f1_binary"]
-    elif "f1_macro" in result:
-        return result["f1_macro"]
-    elif "mcc" in result:
-        return result["mcc"]
-    elif "accuracy" in result:    # <-- match "accuracy" not "acc"
-        return result["accuracy"]
-    else:
-        print("Unknown result keys:", result.keys())
-        return None
+def get_wanted_result(result, key="f1_macro"):
+    return result[key]
+    # if "spearmanr" in result:
+    #     return result["spearmanr"]
+    # elif "f1_binary" in result:   # <-- match your compute_metrics output
+    #     return result["f1_binary"]
+    # elif "f1_macro" in result:
+    #     return result["f1_macro"]
+    # elif "mcc" in result:
+    #     return result["mcc"]
+    # elif "accuracy" in result:    # <-- match "accuracy" not "acc"
+    #     return result["accuracy"]
+    # else:
+    #     print("Unknown result keys:", result.keys())
+    #     return None
 
 
 def train(args, train_dataset, model, tokenizer, train_highway=False):
@@ -315,6 +316,7 @@ def evaluate(args, model, tokenizer, prefix="", output_layer=-1, eval_highway=Fa
         elif args.output_mode == "regression":
             preds = np.squeeze(preds)
         result = compute_metrics(eval_task, preds, out_label_ids)
+        print(result)
         results.update(result)
 
         if eval_highway:
@@ -322,6 +324,9 @@ def evaluate(args, model, tokenizer, prefix="", output_layer=-1, eval_highway=Fa
             actual_cost = sum([l*c for l, c in exit_layer_counter.items()])
             full_cost = len(eval_dataloader) * model.num_layers
             print("Expected saving", actual_cost/full_cost)
+            avg_exit_layer = sum(l * c for l, c in exit_layer_counter.items()) / sum(exit_layer_counter.values())
+            print(f"Average Exit Layer: {avg_exit_layer:.2f}")
+            result["avg_exit_layer"] = avg_exit_layer
             if args.early_exit_entropy>=0:
                 save_fname = args.plot_data_dir + '/' +\
                              args.model_name_or_path[2:] +\
@@ -585,6 +590,10 @@ def main():
                               eval_highway=args.eval_highway)
             print_result = get_wanted_result(result)
             print("Result: {}".format(print_result))
+            acc = result["accuracy"] * 100
+            f1m = result["f1_macro"] * 100
+            print(f"Acc: {acc:.2f} | F1-macro: {f1m:.2f}")
+
             if args.eval_each_highway:
                 last_layer_results = print_result
                 each_layer_results = []
