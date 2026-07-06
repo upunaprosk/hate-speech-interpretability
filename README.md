@@ -6,6 +6,9 @@
   <a href="https://arxiv.org/abs/2511.06391" target="_blank">
       <img alt="Paper" src="https://img.shields.io/badge/📜-Paper-purple" />
    </a>
+     <a href="poster_470.pdf" target="_blank">
+    <img alt="Poster" src="https://img.shields.io/badge/🖼️_Poster-PDF-blue" />
+  </a>
   <a href="https://lrec2026.info" target="_blank">
       <img alt="LREC 2026" src="https://img.shields.io/badge/Proceedings-LREC 2026-red" />
    </a>
