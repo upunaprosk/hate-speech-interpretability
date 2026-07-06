@@ -1,25 +1,85 @@
-# HatePrototypes: Interpretable and Transferable Representations for Hate Speech Detection
+# [LREC 2026 | HatePrototypes: Interpretable and Transferable Representations for Hate Speech Detection](https://arxiv.org/abs/2511.06391)
 
-This repository contains code for the paper:
+   <a href="https://huggingface.co/papers/2511.06391" target="_blank">
+      <img alt="HF" src="https://img.shields.io/badge/📚HF-Papers" />
+   </a>
+  <a href="https://arxiv.org/abs/2511.06391" target="_blank">
+      <img alt="Paper" src="https://img.shields.io/badge/📜-Paper-purple" />
+   </a>
+  <a href="https://lrec2026.info" target="_blank">
+      <img alt="LREC 2026" src="https://img.shields.io/badge/Proceedings-LREC 2026-red" />
+   </a>
 
-**[HatePrototypes: Interpretable and Transferable Representations for Implicit and Explicit Hate Speech Detection](https://arxiv.org/abs/2511.06391)**  
+This repository contains data and evaluation code for the paper **[HatePrototypes: Interpretable and Transferable Representations for Implicit and Explicit Hate Speech Detection](https://arxiv.org/abs/2511.06391)**  
 *Irina Proskurina, Marc-Antoine Carpentier, Julien Velcin*
 
----
+
+
+## 🔥 News
+* **14 May, 2026:** 🎉Our paper was presented at LREC in Palma de Mallorca ☀️ [LREC 2026 Proceedings](https://lrec.elra.info/lrec2026-main-343) 🔥
+* **26 February, 2026:** 🎉 We release the official codebase and data! [[GitHub](https://github.com/upunaprosk/hate-prototypes)] 🔥
+* **12 February, 2026:** 🎉 Our work has been accepted to [LREC 2026](https://lrec2026.info)! ✨
+
+## 🌟 Overview
+
 <p align="center">
   <img src="scheme-prototypes.jpg" 
        alt="HatePrototypes scheme" 
        width="500">
 </p>
 
-
-
----
 > Current approaches to hate speech detection, particularly for implicit or indirect expressions of hate, often depend on repeated pre-training or fine-tuning of large language models on newly collected datasets. Explicit hate is typically identifiable through surface cues, but implicit hate requires deeper contextual processing, which makes traditional supervised adaptation expensive and dataset-dependent.  
 >  
 > We introduce **HatePrototypes**, class-level vector representations derived from models optimized for hate speech detection and safety moderation. These prototypes, obtained from as few as 50 labeled examples per class, enable robust cross-dataset transfer between explicit and implicit hate benchmarks. We show that prototypes are modular, interchangeable across datasets, and allow parameter-free early exiting and classification without task-specific fine-tuning.
 
----
+
+## Main Results
+
+### Prototype Transfer
+
+We test whether prototypes built from one dataset can be used to classify examples from another dataset.
+
+For each evaluation domain `X`, we compare performance using prototypes from another dataset `Y` against in-domain fine-tuned performance:
+
+```math
+\frac{F1(X \mid proto(Y))}{F1(X \mid proto(X))}
+```
+
+Here, `X` is the encoder/evaluation domain and `Y` is the prototype source domain.
+
+<p align="center">
+  <img src="bert_opt_prototype_transfer.png"
+       alt="HatePrototypes transfer results"
+       width="500">
+</p>
+
+Prototypes constructed from other datasets achieve performance close to the fine-tuned baselines in many settings. The strongest transfer is observed for the OLID-tuned model, which retains about 95–100% of its in-domain macro-F1 when using prototypes from other benchmarks.
+
+The weakest transfer occurs when prototypes from the implicit SBIC dataset are applied to the explicit HateXplain domain.
+
+### Prototype Classification for Guard Models
+
+We also evaluate whether prototypes can improve guard models for hate-speech classification.
+
+We test:
+
+- [LLaMA-Guard-1B](https://huggingface.co/meta-llama/Llama-Guard-3-1B)
+- [BLOOMz-3B-Guard](https://huggingface.co/cmarkea/bloomz-3b-guardrail)
+
+These models are designed for general content safety moderation, not specifically for hate-speech detection. We evaluate whether prototype-based classification improves their performance on implicit and explicit hate-speech datasets.
+
+<p align="center">
+  <img src="guard-models-results.png"
+       alt="Guard model prototype classification results"
+       width="500">
+</p>
+
+Prototype classification improves performance across all tested settings. The largest macro-F1 gains are observed for SBIC with LLaMA-Guard, improving from 52.14% to 70.33%, and for IHC with BLOOMz-Guard, improving from 49.49% to 60.92%.
+
+BLOOMz-Guard performs lower on SBIC, suggesting that it may be more biased toward explicit hate categories such as those represented in OLID.
+
+Overall, prototype-based classification improves out-of-domain performance for both standard classifiers and guardrail moderation models without additional fine-tuning.
+
 
 
 ## Dependencies
