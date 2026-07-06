@@ -274,13 +274,17 @@ An example notebook is provided at `notebooks/early_exiting_prototypes.ipynb`, w
 ## Citation
 
 ```
-@misc{proskurina2025hateprototypesinterpretabletransferablerepresentations,
-      title={HatePrototypes: Interpretable and Transferable Representations for Implicit and Explicit Hate Speech Detection}, 
-      author={Irina Proskurina and Marc-Antoine Carpentier and Julien Velcin},
-      year={2025},
-      eprint={2511.06391},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2511.06391}, 
+@inproceedings{proskurina-etal-2026-hateprototypes,
+  title = {HatePrototypes: Interpretable and Transferable Representations for Implicit and Explicit Hate Speech Detection},
+  author = {Proskurina, Irina and Carpentier, Marc-Antoine and Velcin, Julien},
+  booktitle = {Proceedings of the Fifteenth Language Resources and Evaluation Conference (LREC 2026)},
+  month = {May},
+  year = {2026},
+  pages = {4387--4399},
+  address = {Palma, Mallorca, Spain},
+  publisher = {European Language Resources Association (ELRA)},
+  editor = {Piperidis, Stelios and Bel, Núria and van den Heuvel, Henk and Ide, Nancy and Krek, Simon and Toral, Antonio},
+  doi = {10.63317/3opu4zq9p6pc},
+  abstract = {Optimization of offensive content moderation models for different types of hateful messages is typically achieved through continued pre-training or fine-tuning on new hate speech benchmarks. However, existing benchmarks mainly address explicit hate toward protected groups and often overlook implicit or indirect hate, such as demeaning comparisons, calls for exclusion or violence, and subtle discriminatory language that still causes harm. While explicit hate can often be captured through surface features, implicit hate requires deeper, full-model semantic processing. In this work, we question the need for repeated fine-tuning and analyze the role of HatePrototypes, class-level vector representations derived from language models optimized for hate speech detection and safety moderation. We find that these prototypes, built from as few as 50 examples per class, enable cross-task transfer between explicit and implicit hate, with interchangeable prototypes across benchmarks. Moreover, we show that parameter-free early exiting with prototypes is effective for both hate types. We release the code, prototype resources, and evaluation scripts to support future research on efficient and transferable hate speech detection.}
 }
 ```
